@@ -325,3 +325,7 @@ This implementation provides a foundational proof-of-concept. Potential next ste
 ---
 
 *This README provides an overview of the SCM framework.*
+
+---
+
+*Learn more in the [Medium launch article](https://medium.com/@pilothobs/introducing-scm-an-open-source-framework-for-building-adaptive-sentient-software-9a86a6c2acbd)*
