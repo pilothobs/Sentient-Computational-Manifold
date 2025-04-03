@@ -279,6 +279,35 @@ chmod +x tools/*.py
 
 ---
 
+## 🪟 Windows Survival Guide
+
+If you're developing on Windows, here are a few tips:
+
+1.  **Navigate to Project Root:** Ensure your terminal is in the main project directory (the one containing the `scm/` folder).
+    ```powershell
+    cd path\\to\\Sentient-Computational-Manifold
+    ```
+
+2.  **Activate Virtual Environment:** Use the Windows-specific activation command.
+    ```powershell
+    .venv\\Scripts\\activate
+    ```
+
+3.  **Running Tools:** Windows doesn't directly support `chmod +x`. Always run tools using the Python interpreter from the project root.
+    ```powershell
+    # Example: Run the agent simulation
+    python scm/tools/scm.py agent-run scm/nodes/ -v --trace
+
+    # Example: Validate a node
+    python scm/tools/scm.py validate scm/nodes/node_example_v1.0.0.json
+    ```
+
+4.  **Graphviz Installation:** If you encounter errors related to Graphviz (e.g., when using `./tools/visualize_graph.py`), you need to:
+    *   Install Graphviz for Windows from the official website.
+    *   **Crucially, add the Graphviz `bin` directory** (e.g., `C:\\Program Files\\Graphviz\\bin`) to your system's **PATH environment variable**. You might need to restart your terminal or system for the change to take effect.
+
+---
+
 ## 🗺️ Future Roadmap
 
 This implementation provides a foundational proof-of-concept. Potential next steps include:
