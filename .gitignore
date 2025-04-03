@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+
+# Project-specific logs and generated files
+scm_traces/
+scm_graph_visualization.gv*
+
+# Environment variables
+.env
