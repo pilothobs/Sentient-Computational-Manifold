@@ -1,0 +1,42 @@
+{
+  "node_id": "node_preprocess_data_v1.5.0",
+  "label": "Data Preprocessor",
+  "purpose_statement": "Clean and normalize historical sales data.",
+  "semantic_type": "scm_ontology:DataPreprocessing",
+  "version": "1.5.0",
+  "depends_on": [],
+  "inputs": [
+    {
+      "input_name": "raw_sales_db_ref",
+      "data_type_ref": "type_string_v1.0.0",
+      "source": "external_parameter"
+    }
+  ],
+  "outputs": [
+    {
+      "output_name": "processed_history",
+      "data_type_ref": "type_product_sales_ts_v1.2.0",
+      "semantic_meaning": "scm_ontology:CleanedSalesTimeSeries"
+    }
+  ],
+  "execution_logic": {
+    "type": "External_Call", 
+    "reference": "service_data_cleaner_v1", 
+    "parameters": { "normalization_method": "min-max" }
+  },
+  "state_management": {
+    "type": "Ephemeral"
+  },
+  "resilience_policy": [
+      { "condition": "ExecutionError", "action": "Alert", "action_params": { "target_agent": "agent_monitor_v1" } }
+  ],
+  "observability": {
+    "metrics": [],
+    "logs": { "level": "Info", "content": "Standard" },
+    "trace_propagation": true
+  },
+  "rationale": "Initial preprocessor node.",
+  "author_agent_ref": "user_init",
+  "creation_timestamp": "2024-11-01T09:00:00Z",
+  "tags": ["data-prep"]
+} 

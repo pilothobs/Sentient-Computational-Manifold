@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SCM Core Graph Node v1.1",
+  "description": "Formal schema definition for a node within the Sentient Computational Manifold (SCM) graph.",
+  "type": "object",
+  "properties": {
+    "@id": { "type": "string", "pattern": "^node_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" },
+    "label": { "type": "string" },
+    "purpose_statement": { "type": "string" },
+    "semantic_type": { "type": "string", "format": "uri-reference" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "depends_on": {
+      "type": "array", "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "node_ref": { "type": "string", "pattern": "^node_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" },
+          "connection_type": { "type": "string", "enum": ["DataFlow", "ControlFlow", "Context"], "default": "DataFlow" },
+          "required_state": { "type": "string" }
+        },
+        "required": ["node_ref"]
+      }
+    },
+    "inputs": {
+      "type": "array", "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "input_name": { "type": "string" },
+          "data_type_ref": { "type": "string", "pattern": "^type_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" },
+          "source": { 
+            "oneOf": [
+              { "type": "string", "pattern": "^(node|api|mem)_[a-z0-9_\\-]+(_v\\d+\\.\\d+\\.\\d+)?$" },
+              { "type": "string", "const": "external_parameter" }
+            ]
+          },
+          "constraints": { "oneOf": [ { "type": "string" }, { "type": "object" } ] }
+        },
+        "required": ["input_name", "data_type_ref", "source"]
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "output_name": { "type": "string" },
+          "data_type_ref": { "type": "string", "pattern": "^type_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" },
+          "semantic_meaning": { "type": "string", "format": "uri-reference" },
+          "confidence_metric_ref": { "type": "string", "pattern": "^metric_def_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" }
+        },
+        "required": ["output_name", "data_type_ref", "semantic_meaning"]
+      }
+    },
+    "execution_logic": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["Algorithm_Ref", "Model_Ref", "Subgraph_Ref", "Intent_Ref", "External_Call"] },
+        "reference": { "type": "string", "pattern": "^(algo|model|graph|intent|api)_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" },
+        "parameters": { "type": "object", "additionalProperties": true }
+      },
+      "required": ["type", "reference"]
+    },
+    "state_management": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["Ephemeral", "Stateful", "Contextual"], "default": "Ephemeral" },
+        "memory_ref": { "type": "string", "pattern": "^mem_[a-z0-9_\\-]+$" },
+        "persistence_scope": { "type": "string", "enum": ["Task", "Session", "LongTerm"] }
+      },
+      "if": { "properties": { "type": { "enum": ["Stateful", "Contextual"] } } },
+      "then": { "required": ["memory_ref", "persistence_scope"] },
+      "required": ["type"]
+    },
+    "resilience_policy": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "condition": { "type": "string" },
+          "action": { "type": "string", "enum": ["Retry", "Fallback", "Alert", "Isolate", "Compensate", "Halt"] },
+          "action_params": { "type": "object", "additionalProperties": true }
+        },
+        "required": ["condition", "action"]
+      }
+    },
+    "observability": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array", "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "metric_ref": { "type": "string", "pattern": "^metric_def_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" }
+            },
+            "required": ["metric_ref"]
+          }
+        },
+        "logs": {
+          "type": "object",
+          "properties": {
+            "level": { "type": "string", "enum": ["Debug", "Info", "Warn", "Error", "None"], "default": "Info" },
+            "content": { "type": "string", "enum": ["Standard", "Verbose", "Custom_Schema_Ref"], "default": "Standard" }
+          },
+          "required": ["level", "content"]
+        },
+        "trace_propagation": { "type": "boolean", "default": true }
+      },
+      "required": ["metrics", "logs", "trace_propagation"]
+    },
+    "adaptation_strategy": {
+      "type": "object",
+      "properties": {
+        "trigger": { "type": "string", "enum": ["Performance_Degradation", "External_Feedback", "Scheduled_Review", "Manual_Trigger"] },
+        "metric_ref": { "type": "string", "pattern": "^metric_def_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" },
+        "method": { "type": "string", "enum": ["Retrain_Model", "Adjust_Parameters", "Select_New_Algorithm", "Trigger_Human_Review", "Evolve_Structure"] },
+        "method_params": { "type": "object", "additionalProperties": true }
+      },
+      "required": ["trigger", "metric_ref", "method"]
+    },
+    "self_test_suite": {
+      "type": "array", "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "test_case_ref": { "type": "string", "pattern": "^test_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" }
+        },
+        "required": ["test_case_ref"]
+      }
+    },
+    "virtualization_support": { "type": "boolean", "default": false },
+    "security_policy": {
+      "type": "object",
+      "properties": {
+        "access_level": { "type": "string", "enum": ["Public", "Internal", "Restricted", "Private"], "default": "Internal" },
+        "authorized_agents": {
+          "type": "array", "default": [],
+          "items": { "type": "string", "pattern": "^(agent|user)_[a-z0-9_\\-]+$" }
+        }
+      },
+      "required": ["access_level"]
+    },
+    "deprecation": {
+      "type": "object",
+      "properties": {
+        "is_deprecated": { "type": "boolean", "default": false },
+        "reason": { "type": "string" },
+        "replacement_node_ref": { "type": "string", "pattern": "^node_[a-z0-9_\\-]+_v\\d+\\.\\d+\\.\\d+$" }
+      },
+      "required": ["is_deprecated"],
+      "if": { "properties": { "is_deprecated": { "const": true } } },
+      "then": { "required": ["is_deprecated", "reason", "replacement_node_ref"] }
+    },
+    "rationale": { "type": "string" },
+    "author_agent_ref": { "type": "string", "pattern": "^(agent|user)_[a-z0-9_\\-]+$" },
+    "creation_timestamp": { "type": "string", "format": "date-time" },
+    "tags": { "type": "array", "default": [], "items": { "type": "string" } }
+  },
+  "required": [
+    "@id",
+    "purpose_statement",
+    "semantic_type",
+    "version",
+    "outputs",
+    "execution_logic",
+    "state_management",
+    "resilience_policy",
+    "observability",
+    "rationale",
+    "author_agent_ref",
+    "creation_timestamp"
+  ]
+} 

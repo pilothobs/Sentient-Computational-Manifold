@@ -1,0 +1,42 @@
+{
+  "@id": "node_fetch_market_trends_v1.0.0",
+  "label": "Market Trend Fetcher",
+  "purpose_statement": "Fetch current market indicators relevant to product category.",
+  "semantic_type": "scm_ontology:MarketDataRetrieval",
+  "version": "1.0.0",
+  "depends_on": [],
+  "inputs": [
+    {
+      "input_name": "product_category",
+      "data_type_ref": "type_string_v1.0.0",
+      "source": "external_parameter"
+    }
+  ],
+  "outputs": [
+    {
+      "output_name": "market_data",
+      "data_type_ref": "type_market_indicators_v1.0.0", 
+      "semantic_meaning": "scm_ontology:MarketIndicators"
+    }
+  ],
+  "execution_logic": {
+    "type": "External_Call", 
+    "reference": "api_market_pulse_v2.0.0",
+    "parameters": { "region": "US" }
+  },
+  "state_management": {
+    "type": "Ephemeral"
+  },
+  "resilience_policy": [
+     { "condition": "ExecutionError", "action": "Alert", "action_params": { "target_agent": "agent_monitor_v1" } }
+  ],
+  "observability": {
+    "metrics": [],
+    "logs": { "level": "Info", "content": "Standard" },
+    "trace_propagation": true
+  },
+  "rationale": "Initial market data fetcher.",
+  "author_agent_ref": "user_init",
+  "creation_timestamp": "2024-11-01T09:05:00Z",
+  "tags": ["data-fetch", "market"]
+} 

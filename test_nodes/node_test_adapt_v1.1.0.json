@@ -1,0 +1,50 @@
+{
+  "@id": "node_test_adapt_v1.1.0",
+  "version": "1.1.0",
+  "purpose_statement": "Test node for adaptation",
+  "semantic_type": "scm_ontology:PlaceholderTestNode",
+  "execution_logic": {
+    "type": "Model_Ref",
+    "reference": "model_dummy_v1.0.0",
+    "parameters": {
+      "threshold": 0.5,
+      "rate": 11.648
+    }
+  },
+  "outputs": [],
+  "state_management": {
+    "type": "Ephemeral"
+  },
+  "resilience_policy": [
+    {
+      "condition": "ExecutionError",
+      "action": "Alert",
+      "action_params": {
+        "target_agent": "agent_monitor_v1"
+      }
+    }
+  ],
+  "observability": {
+    "metrics": [],
+    "logs": {
+      "level": "Info",
+      "content": "Standard"
+    },
+    "trace_propagation": true
+  },
+  "adaptation_strategy": {
+    "trigger": "Performance_Degradation",
+    "metric_ref": "metric_def_confidence_v1.0.0",
+    "method": "Adjust_Parameters",
+    "method_params": {},
+    "_trigger_condition": "Low Confidence",
+    "_trigger_details": {
+      "confidence": 0.9799788616962359,
+      "threshold": 0.99
+    }
+  },
+  "rationale": "Adapted due to 'Low Confidence'. Method: 'Adjust_Parameters'. Details: {'confidence': 0.9799788616962359, 'threshold': 0.99}. Adjusted parameter 'rate' from 10 to 11.648.",
+  "author_agent_ref": "agent_adaptor_v1",
+  "creation_timestamp": "2025-04-03T12:56:18.384054+00:00",
+  "derived_from": "node_test_adapt_v1.0.0"
+}

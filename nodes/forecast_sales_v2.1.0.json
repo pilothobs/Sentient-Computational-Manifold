@@ -1,0 +1,66 @@
+{
+  "@id": "node_forecast_sales_v2.1.0",
+  "label": "Monthly Product Sales Forecaster",
+  "purpose_statement": "Generate monthly sales volume forecasts for individual products using historical data and market trends.",
+  "semantic_type": "scm_ontology:SalesForecastGeneration",
+  "version": "2.1.0",
+  "depends_on": [
+    { "node_ref": "node_preprocess_data_v1.5.0", "connection_type": "DataFlow" },
+    { "node_ref": "node_fetch_market_trends_v1.0.0", "connection_type": "DataFlow", "required_state": "Freshness > now() - 1h" }
+  ],
+  "inputs": [
+    {
+      "input_name": "processed_history",
+      "data_type_ref": "type_product_sales_ts_v1.2.0",
+      "source": "node_preprocess_data_v1.5.0"
+    },
+    {
+      "input_name": "market_data",
+      "data_type_ref": "type_market_indicators_v1.0.0",
+      "source": "node_fetch_market_trends_v1.0.0"
+    }
+  ],
+  "outputs": [
+    {
+      "output_name": "monthly_forecast",
+      "data_type_ref": "type_numeric_timeseries_v1.0.0",
+      "semantic_meaning": "scm_ontology:PredictedSalesVolume"
+    },
+    {
+      "output_name": "forecast_confidence",
+      "data_type_ref": "type_scalar_float_v1.0.0",
+      "semantic_meaning": "scm_ontology:ForecastConfidenceScore"
+    }
+  ],
+  "execution_logic": {
+    "type": "Model_Ref",
+    "reference": "model_lstm_sales_predictor_v3.2.0",
+    "parameters": { "lookback_window": 12, "prediction_horizon": 3 }
+  },
+  "state_management": {
+    "type": "Ephemeral"
+  },
+  "resilience_policy": [
+    { "condition": "InputValidationError", "action": "Alert", "action_params": { "target_agent": "agent_monitor_v1" } },
+    { "condition": "Confidence < 0.7", "action": "Fallback", "action_params": { "node_ref": "node_simple_avg_forecast_v1.0.0" } }
+  ],
+  "observability": {
+    "metrics": [
+      { "metric_ref": "metric_def_forecast_confidence_mae_v1.0.0" }
+    ],
+    "logs": { "level": "Info", "content": "Standard" },
+    "trace_propagation": true
+  },
+  "adaptation_strategy": {
+    "trigger": "Performance_Degradation",
+    "metric_ref": "metric_def_forecast_confidence_mae_v1.0.0",
+    "method": "Adjust_Parameters",
+    "method_params": {
+      "intended_adjustment": "Increase lookback_window by 4, prediction_horizon by 1"
+    }
+  },
+  "rationale": "Updated model and lookback window to reflect Q3 2024 seasonality.",
+  "author_agent_ref": "agent_optimizer_v7",
+  "creation_timestamp": "2024-10-27T10:00:00Z",
+  "tags": ["forecasting", "finance"]
+} 
