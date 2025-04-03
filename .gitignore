@@ -9,7 +9,10 @@ __pycache__/
 
 # Project-specific logs and generated files
 scm_traces/
-scm_graph_visualization.gv*
+# scm_graph_visualization.gv*
 
 # Environment variables
 .env
+
+# Explicitly track the generated graph PNG for the README
+!docs/assets/scm_graph_visualization.png

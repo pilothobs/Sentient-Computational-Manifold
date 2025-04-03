@@ -12,8 +12,8 @@ Get up and running quickly:
 
 ```bash
 # 1. Clone the repository (replace with your actual URL)
-git clone https://github.com/your-org/scm.git
-cd scm
+git clone https://github.com/pilothobs/Sentient-Computational-Manifold.git
+cd Sentient-Computational-Manifold
 
 # 2. Create virtual environment & install dependencies
 python3 -m venv .venv
@@ -108,7 +108,7 @@ digraph SCM_Graph {
 
 *(You can generate the actual graph image using `scm/tools/visualize_graph.py` - see Quick Start / Usage)*
 
-![SCM Graph Visualization](scm/docs/assets/scm_graph_visualization.png "SCM Graph Visualization - Includes dependency and adaptation edges")
+![SCM Graph Visualization](docs/assets/scm_graph_visualization.png "SCM Graph Visualization - Includes dependency and adaptation edges")
 
 *(The image above should render once the Graphviz tools are installed and visualize_graph.py is run)*
 
@@ -166,8 +166,8 @@ To run the SCM framework locally, your system should meet the following minimum 
 
 ```bash
 # Clone repository (use your actual URL)
-git clone https://github.com/your-org/scm.git
-cd scm
+git clone https://github.com/pilothobs/Sentient-Computational-Manifold.git
+cd Sentient-Computational-Manifold
 
 # Create and activate virtual environment
 python3 -m venv .venv
