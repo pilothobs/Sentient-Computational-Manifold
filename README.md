@@ -1,12 +1,33 @@
 # Sentient Computational Manifold (SCM)
 
-**A framework for building intelligent, adaptive, and self-evolving software systems.**
+**A framework for building intelligent, adaptive, and self-evolving software systems using machine-readable JSON nodes and AI-driven orchestration.**
 
 SCM represents a shift from traditional, brittle codebases to dynamic, machine-readable computation graphs. Logic, behavior, execution constraints, and adaptation strategies are encoded within self-describing JSON nodes, enabling systems that can validate, simulate, execute, observe, and even rewrite themselves.
+
+## 🎯 Use Cases
+
+SCM is designed for a wide range of applications where adaptive intelligence and self-evolution are beneficial:
+
+- **AI Orchestration Pipelines**: Create flexible, self-optimizing AI workflows that adapt based on data quality and results.
+- **Resilient Microservices**: Build services that can automatically adjust to changing load patterns or API dependencies.
+- **Business Process Automation**: Design processes that learn from execution metrics and self-tune for optimal performance.
+- **IoT Data Processing**: Implement edge-to-cloud processing pipelines that adapt to network conditions and device capabilities.
+- **Scientific Computing**: Create workflows that adjust analysis parameters based on intermediate results.
 
 ---
 
 ## ⚡ Quick Start
+
+### Prerequisites
+
+Before getting started, ensure you have:
+
+- **Python 3.10+** installed
+- **Git** for version control
+- **Graphviz** (optional, for visualization features)
+- Basic knowledge of JSON and Python
+
+### Installation
 
 Get up and running quickly:
 
@@ -38,6 +59,38 @@ chmod +x tools/*.py
 # (Outputs scm_graph_visualization.gv and scm_graph_visualization.gv.png)
 ```
 
+### Simple Example
+
+Here's a minimal example of what SCM can do:
+
+```bash
+# 1. Create a simple node definition (see examples in nodes/)
+cat > my_first_node.json << EOL
+{
+  "@type": "SCM_Node",
+  "@id": "node_example_v1.0.0",
+  "name": "Example Node",
+  "version": "1.0.0",
+  "description": "A simple example node",
+  "execution_type": "Function",
+  "execution_logic": {
+    "function": "return {'result': inputs['value'] * 2}",
+    "parameters": {}
+  },
+  "inputs": [{"name": "value", "data_type_ref": "type_number"}],
+  "outputs": [{"name": "result", "data_type_ref": "type_number"}]
+}
+EOL
+
+# 2. Validate the node
+./tools/scm.py validate my_first_node.json
+
+# 3. Run a simulation with the node
+mkdir -p test_nodes
+mv my_first_node.json test_nodes/
+./tools/scm.py simulate test_nodes/ --trace
+```
+
 ---
 
 ## ✨ Features
@@ -56,7 +109,9 @@ chmod +x tools/*.py
 
 ## 🏗️ Architecture Overview
 
-SCM consists of several core modules:
+SCM consists of several core modules working together to create a flexible, adaptive computational framework:
+
+![SCM Architecture Diagram](docs/assets/diagrams/scm_architecture.png "SCM Architecture - Core Components and Data Flow")
 
 1.  **Schema & Nodes (`schemas/`, `nodes/`)**: Defines the structure (`scm_node.schema.json`) and holds instances of SCM nodes (JSON files).
 2.  **Graph (`graph/`)**: The `SCMGraphComposer` builds the executable DAG from nodes and determines the execution plan.
@@ -66,6 +121,8 @@ SCM consists of several core modules:
 6.  **Monitoring (`monitoring/`)**: The `SCMTracer` manages trace sessions and logs detailed execution events.
 7.  **Adaptive (`adaptive/`)**: The `AdaptationManager` evaluates adaptation triggers based on metrics and performs auto-versioning.
 8.  **CLI & Tools (`cli/`, `tools/`)**: Provides user interfaces (main CLI, log viewers, visualizer).
+
+### Project Structure
 
 ```
 scm-env/
@@ -80,6 +137,7 @@ scm-env/
     ├── adaptive/         # Adaptation manager (trigger evaluation, auto-versioning)
     ├── cli/              # Main CLI command logic
     ├── tools/            # Helper scripts (CLI entrypoint, viewers, visualizer)
+    ├── docs/             # Documentation assets and extended guides
     ├── scm_traces/       # Default output dir for trace logs & adaptation log
     ├── .venv/            # Python virtual environment
     └── README.md         # This file

@@ -1,0 +1,75 @@
+digraph SCM_Architecture {
+    rankdir="TB";
+    splines="ortho";
+    nodesep=0.8;
+    ranksep=1.0;
+    node [shape=box, style=filled, fillcolor="#EFEFEF", fontname=Helvetica, fontsize=12];
+    edge [fontname=Helvetica, fontsize=10];
+    
+    subgraph cluster_core {
+        label="SCM Core Components";
+        style=filled;
+        color="#E8F0FE";
+        node [style=filled, fillcolor="#D0E0FC"];
+        
+        nodes [label="Schema & Nodes\n(JSON Definitions)"];
+        graph_composer [label="Graph Composer\n(DAG Builder)"];
+        runtime [label="Execution Engine\n(Node Execution)"];
+        models [label="Model Registry\n(Dynamic Loading)"];
+    }
+    
+    subgraph cluster_intelligence {
+        label="Intelligence Layer";
+        style=filled;
+        color="#E8FEE8";
+        node [style=filled, fillcolor="#D0FCD0"];
+        
+        agents [label="Agent Orchestrator\n(Control & Policy)"];
+        adaptive [label="Adaptation Manager\n(Evolution)"];
+    }
+    
+    subgraph cluster_tools {
+        label="Tools & Interfaces";
+        style=filled;
+        color="#FEE8E8";
+        node [style=filled, fillcolor="#FCD0D0"];
+        
+        cli [label="CLI Interface\n(User Commands)"];
+        monitoring [label="Monitoring System\n(Tracing & Analysis)"];
+        visualization [label="Visualization\n(Graph Renderer)"];
+    }
+    
+    // External entities
+    user [label="User/Developer", shape=ellipse, fillcolor="#FFFFCC"];
+    external_systems [label="External Systems\n(API, Data Sources)", shape=ellipse, fillcolor="#FFFFCC"];
+    
+    // Flow connections
+    user -> cli [label="commands"];
+    cli -> graph_composer [label="load/compose"];
+    cli -> agents [label="run/evaluate"];
+    cli -> visualization [label="generate"];
+    
+    nodes -> graph_composer [label="build from"];
+    graph_composer -> runtime [label="execution plan"];
+    runtime -> models [label="dynamic load"];
+    runtime -> monitoring [label="trace events"];
+    runtime -> agents [label="execute with"];
+    
+    agents -> adaptive [label="trigger"];
+    adaptive -> nodes [label="create new versions"];
+    
+    monitoring -> visualization [label="data for"];
+    external_systems -> runtime [label="data/API calls"];
+    
+    // Legend
+    subgraph cluster_legend {
+        label="Legend";
+        style=filled;
+        color="#F8F8F8";
+        
+        component [label="Core Component", fillcolor="#D0E0FC"];
+        intelligence [label="Intelligence", fillcolor="#D0FCD0"];
+        tool [label="Tool/Interface", fillcolor="#FCD0D0"];
+        external [label="External Entity", shape=ellipse, fillcolor="#FFFFCC"];
+    }
+} 
